@@ -1,266 +1,898 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💕 Una pregunta especial</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💕 Una pregunta especial</title>
 
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 25%, #e8f5e9 50%, #fff9c4 75%, #fce4ec 100%);
-    background-size: 400% 400%;
-    animation: gradientShift 8s ease infinite;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Georgia', serif;
-    overflow: hidden;
-    position: relative;
-  }
+    :root {
+      --pink-1: #fff0f6;
+      --pink-2: #fde2ec;
+      --pink-3: #f8bbd9;
+      --pink-4: #f48fb1;
+      --pink-5: #f06292;
+      --pink-6: #e91e63;
+      --pink-7: #c2185b;
+      --text-soft: #ad1457;
+      --gold: #fff6c7;
+      --shadow: 0 14px 45px rgba(233, 30, 99, 0.18);
+    }
 
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.55), transparent 20%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.35), transparent 24%),
+        linear-gradient(135deg, #fde2ec 0%, #f8bbd9 22%, #e8f5e9 56%, #fff9c4 82%, #fde2ec 100%);
+      background-size: 100% 100%, 100% 100%, 400% 400%;
+      animation: gradientShift 12s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Georgia, serif;
+      overflow: hidden;
+      position: relative;
+      padding: 18px;
+    }
 
-  .petals-container {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 0;
-  }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-  .petal {
-    position: absolute;
-    top: -30px;
-    animation: falling linear infinite;
-    opacity: 0.7;
-  }
+    .sky,
+    .sparkles,
+    .confetti-layer,
+    .love-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
 
-  @keyframes falling {
-    0% { transform: translateY(-30px) rotate(0deg); opacity: 0.7; }
-    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-  }
+    .sky { z-index: 0; }
+    .sparkles { z-index: 1; }
+    .confetti-layer { z-index: 20; }
+    .love-layer { z-index: 21; }
 
-  .card {
-    position: relative;
-    z-index: 10;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border-radius: 36px;
-    padding: 3.5rem 3.2rem;
-    text-align: center;
-    max-width: 580px;
-    width: 92%;
-    box-shadow: 0 8px 40px rgba(233, 30, 99, 0.18), 0 2px 10px rgba(0,0,0,0.08);
-    border: 2px solid rgba(233, 30, 99, 0.18);
-  }
+    .float-item {
+      position: absolute;
+      top: -40px;
+      opacity: 0.78;
+      user-select: none;
+      animation: falling linear infinite;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.08));
+    }
 
-  .bunny {
-    font-size: 110px;
-    display: block;
-    margin-bottom: 0.6rem;
-    animation: bounce 2s ease-in-out infinite;
-  }
+    @keyframes falling {
+      0% {
+        transform: translateY(-40px) rotate(0deg) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.85;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg) translateX(32px);
+        opacity: 0;
+      }
+    }
 
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-  }
+    .sparkle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      box-shadow: 0 0 10px rgba(255,255,255,0.9);
+      animation: twinkle ease-in-out infinite;
+    }
 
-  .question {
-    font-size: 2.6rem;
-    color: #c2185b;
-    font-weight: bold;
-    margin-bottom: 0.6rem;
-    line-height: 1.3;
-  }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 0.95; transform: scale(1.2); }
+    }
 
-  .subtitle {
-    font-size: 1.3rem;
-    color: #ad1457;
-    margin-bottom: 2.4rem;
-    font-style: italic;
-  }
+    .card {
+      position: relative;
+      z-index: 5;
+      width: min(94%, 760px);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(14px);
+      border: 2px solid rgba(233, 30, 99, 0.12);
+      border-radius: 38px;
+      padding: 3rem 2.2rem 2.7rem;
+      text-align: center;
+      box-shadow: var(--shadow), 0 8px 22px rgba(0, 0, 0, 0.08);
+      animation: cardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
 
-  .btn-group {
-    display: flex;
-    gap: 1.6rem;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-  }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,0.22), transparent 30%, transparent 70%, rgba(255,255,255,0.12));
+      pointer-events: none;
+    }
 
-  .btn-yes {
-    background: linear-gradient(135deg, #e91e63, #f06292);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 20px 60px;
-    font-size: 1.6rem;
-    font-family: 'Georgia', serif;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-    box-shadow: 0 4px 18px rgba(233, 30, 99, 0.38);
-  }
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
 
-  .btn-yes:hover {
-    transform: scale(1.07);
-    box-shadow: 0 6px 22px rgba(233, 30, 99, 0.55);
-  }
+    .bunny-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 0.3rem;
+    }
 
-  .btn-no {
-    background: white;
-    color: #e91e63;
-    border: 2px solid #f48fb1;
-    border-radius: 50px;
-    padding: 20px 60px;
-    font-size: 1.6rem;
-    font-family: 'Georgia', serif;
-    cursor: pointer;
-    position: relative; /* FIX */
-    white-space: nowrap;
-  }
+    .bunny {
+      display: block;
+      font-size: 6.8rem;
+      animation: bounce 2.25s ease-in-out infinite;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.08));
+      user-select: none;
+    }
 
-  .btn-no:hover { background: #fce4ec; }
+    .halo {
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 20px;
+      border: 4px solid rgba(255, 205, 80, 0.8);
+      border-radius: 50%;
+      opacity: 0.75;
+      filter: blur(0.4px);
+      animation: haloGlow 2.2s ease-in-out infinite;
+    }
 
-  .btn-no.running {
-    transition: left 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
-                top 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
-                font-size 0.4s ease,
-                padding 0.4s ease,
-                opacity 0.5s ease;
-  }
+    @keyframes haloGlow {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.65; }
+      50% { transform: translateX(-50%) scale(1.07); opacity: 1; }
+    }
 
-  .answer-yes {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(-1deg); }
+    }
 
-  .answer-yes .big-emoji {
-    font-size: 90px;
-    animation: pop 0.4s ease;
-  }
+    .question {
+      font-size: clamp(2rem, 4.4vw, 3.2rem);
+      color: var(--pink-7);
+      font-weight: bold;
+      line-height: 1.2;
+      margin-bottom: 0.7rem;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.5);
+    }
 
-  @keyframes pop {
-    0% { transform: scale(0); }
-    70% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-  }
+    .subtitle {
+      font-size: clamp(1.08rem, 1.9vw, 1.35rem);
+      color: var(--text-soft);
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
 
-  .answer-yes p {
-    font-size: 2rem;
-    color: #c2185b;
-    font-weight: bold;
-    line-height: 1.4;
-  }
+    .mini-line {
+      font-size: 1rem;
+      color: #b84a78;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
 
-  .hearts-burst {
-    font-size: 2rem;
-    letter-spacing: 8px;
-    animation: fadeInUp 0.6s ease 0.2s both;
-  }
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: nowrap;
+      position: relative;
+      margin-bottom: 0.8rem;
+    }
 
-  .egg-row {
-    font-size: 2rem;
-    letter-spacing: 5px;
-    animation: fadeInUp 0.6s ease 0.5s both;
-  }
-</style>
+    button {
+      font-family: Georgia, serif;
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      white-space: nowrap;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, filter 0.18s ease;
+      user-select: none;
+    }
+
+    .btn-yes {
+      position: relative;
+      background: linear-gradient(135deg, var(--pink-6), var(--pink-5));
+      color: white;
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
+      padding: 18px 58px;
+      font-weight: bold;
+      box-shadow: 0 9px 22px rgba(233, 30, 99, 0.34);
+      overflow: hidden;
+    }
+
+    .btn-yes::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 70%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.55s ease;
+    }
+
+    .btn-yes:hover::before {
+      left: 140%;
+    }
+
+    .btn-yes:hover {
+      transform: scale(1.08) translateY(-1px);
+      box-shadow: 0 12px 28px rgba(233, 30, 99, 0.42);
+      filter: saturate(1.05);
+    }
+
+    .btn-yes.pulse {
+      animation: pulseYes 1.3s ease-in-out infinite;
+    }
+
+    @keyframes pulseYes {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    .btn-no {
+      background: white;
+      color: var(--pink-6);
+      border: 2px solid var(--pink-4);
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
+      padding: 18px 58px;
+      position: relative;
+      box-shadow: 0 6px 16px rgba(244, 143, 177, 0.18);
+    }
+
+    .btn-no:hover {
+      background: #fff0f5;
+      transform: scale(1.04);
+    }
+
+    .btn-no.shake {
+      animation: shakeNo 0.22s linear 2;
+    }
+
+    @keyframes shakeNo {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-3px); }
+      100% { transform: translateX(0); }
+    }
+
+    .btn-no.running {
+      transition:
+        left 0.46s cubic-bezier(0.34, 1.56, 0.64, 1),
+        top 0.46s cubic-bezier(0.34, 1.56, 0.64, 1),
+        padding 0.28s ease,
+        font-size 0.28s ease,
+        opacity 0.35s ease,
+        transform 0.28s ease;
+    }
+
+    .answer-yes {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+      animation: fadePop 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes fadePop {
+      from {
+        opacity: 0;
+        transform: scale(0.92) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .success-crown {
+      font-size: 1.7rem;
+      animation: floatMini 1.8s ease-in-out infinite;
+    }
+
+    @keyframes floatMini {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .big-emoji {
+      font-size: 5.7rem;
+      animation: heartbeat 1s ease-in-out infinite;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08));
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.12); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.08); }
+    }
+
+    .answer-yes h2 {
+      color: var(--pink-7);
+      font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+      line-height: 1.2;
+    }
+
+    .answer-yes p {
+      font-size: clamp(1.25rem, 2.5vw, 1.85rem);
+      color: var(--pink-7);
+      font-weight: bold;
+      line-height: 1.35;
+    }
+
+    .love-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-top: 0.2rem;
+    }
+
+    .hearts-line,
+    .egg-line,
+    .cute-line {
+      font-size: 1.5rem;
+      letter-spacing: 5px;
+      animation: softFadeUp 0.55s ease both;
+    }
+
+    .hearts-line { animation-delay: 0.15s; }
+    .egg-line { animation-delay: 0.3s; }
+    .cute-line { animation-delay: 0.45s; }
+
+    @keyframes softFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .yes-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 26px;
+      background: radial-gradient(circle, rgba(255, 182, 219, 0.26), transparent 58%);
+      filter: blur(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .show-glow {
+      opacity: 1;
+    }
+
+    .mute-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 8;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+      color: var(--pink-7);
+      border: 1px solid rgba(233,30,99,0.12);
+      font-size: 1.05rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+
+    .mute-btn:hover {
+      transform: scale(1.08);
+      background: rgba(255,255,255,0.95);
+    }
+
+    .center-tip {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #b35c86;
+      opacity: 0.8;
+    }
+
+    .confetti,
+    .love-pop {
+      position: absolute;
+      user-select: none;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .confetti {
+      animation: confettiFly 1.8s ease-out forwards;
+    }
+
+    @keyframes confettiFly {
+      0% {
+        transform: translate(0, 0) scale(0.8) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) scale(1.25) rotate(var(--rot));
+        opacity: 0;
+      }
+    }
+
+    .love-pop {
+      animation: loveBurst 1.5s ease-out forwards;
+      font-size: 1.7rem;
+    }
+
+    @keyframes loveBurst {
+      0% {
+        transform: translate(-50%, -50%) scale(0.2);
+        opacity: 0;
+      }
+      18% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.25);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .card {
+        padding: 2.6rem 1.15rem 2.2rem;
+      }
+
+      .btn-group {
+        gap: 0.7rem;
+      }
+
+      .btn-yes,
+      .btn-no {
+        padding: 16px 28px;
+      }
+
+      .bunny {
+        font-size: 5.5rem;
+      }
+    }
+
+    @media (max-width: 470px) {
+      .mute-btn {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .mini-line,
+      .center-tip {
+        font-size: 0.88rem;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="sky" id="sky"></div>
+  <div class="sparkles" id="sparkles"></div>
+  <div class="confetti-layer" id="confettiLayer"></div>
+  <div class="love-layer" id="loveLayer"></div>
 
-<div class="petals-container" id="petals"></div>
+  <div class="card" id="card">
+    <button class="mute-btn" id="muteBtn" title="Activar o desactivar sonido">🔊</button>
+    <div class="yes-glow" id="yesGlow"></div>
 
-<div class="card">
-  <div id="main-content">
-    <span class="bunny">🐰</span>
-    <div class="question">¿Quieres ser mi conejita de Pascua? 🌸</div>
-    <div class="subtitle">La pregunta más importante del año...</div>
+    <div id="main-content">
+      <div class="bunny-wrap">
+        <div class="halo"></div>
+        <span class="bunny">🐰</span>
+      </div>
 
-    <div class="btn-group">
-      <button class="btn-yes" onclick="handleYes()">¡Sí! 🐣</button>
-      <button class="btn-no" id="btnNo" onclick="handleNo()">No...</button>
+      <div class="question">¿Quieres ser mi conejita de Pascua? 🌸</div>
+      <div class="subtitle">La pregunta más importante del año...</div>
+      <div class="mini-line">Prometo chocolates, ternura y un montón de amor bonito ✨</div>
+
+      <div class="btn-group">
+        <button class="btn-yes pulse" id="btnYes" onclick="handleYes()">¡Sí! 🐣</button>
+        <button class="btn-no" id="btnNo" onclick="handleNo()">No...</button>
+      </div>
+
+      <div class="center-tip">Toca donde quieras después para mini corazoncitos</div>
+    </div>
+
+    <div class="answer-yes" id="answer-yes">
+      <div class="success-crown">👑✨</div>
+      <div class="big-emoji">🥰</div>
+      <h2>¡YEEEEI!</h2>
+      <p>Owww sabía que dirías que sí,<br>¡te amo bebé! 💕</p>
+
+      <div class="love-lines">
+        <div class="hearts-line">💗 💖 💞 💘 💗</div>
+        <div class="egg-line">🥚 🌸 🐰 🌸 🥚</div>
+        <div class="cute-line">✨ 🫶🏻 🌷 💌 ✨</div>
+      </div>
     </div>
   </div>
 
-  <div class="answer-yes" id="answer-yes">
-    <div class="big-emoji">🥰</div>
-    <p>Owww sabía que dirías que sí,<br>¡te amo bebé! 💕</p>
-    <div class="hearts-burst">💗 💖 💗</div>
-    <div class="egg-row">🥚🌸🐰🌸🥚</div>
-  </div>
-</div>
+  <script>
+    const sky = document.getElementById("sky");
+    const sparkles = document.getElementById("sparkles");
+    const confettiLayer = document.getElementById("confettiLayer");
+    const loveLayer = document.getElementById("loveLayer");
+    const btnNo = document.getElementById("btnNo");
+    const btnYes = document.getElementById("btnYes");
+    const muteBtn = document.getElementById("muteBtn");
+    const yesGlow = document.getElementById("yesGlow");
+    const card = document.getElementById("card");
 
-<script>
-  const petalsEl = document.getElementById('petals');
-  const emojis = ['🌸','🌺','🥚','🌷','💕','🌼','🌿'];
+    const floatEmojis = ["🌸", "🌷", "💕", "💖", "🥚", "🌼", "🐰", "💞", "✨"];
+    const burstEmojis = ["💖", "💕", "🌸", "🐰", "🥚", "💗", "💞", "✨", "🫶🏻"];
+    const noMessages = [
+      "No...",
+      "¿Segura? 🥺",
+      "Piénsalo bien 😔",
+      "Andaaa 😢",
+      "Mira el botón rosa 😩",
+      "Última chance 😭",
+      "Ese no era 😶",
+      "No corre, vuela 😳"
+    ];
 
-  for (let i = 0; i < 22; i++) {
-    const p = document.createElement('div');
-    p.className = 'petal';
-    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    p.style.left = Math.random() * 100 + '%';
-    p.style.animationDuration = (4 + Math.random() * 6) + 's';
-    p.style.animationDelay = (-Math.random() * 8) + 's';
-    p.style.fontSize = (14 + Math.random() * 16) + 'px';
-    petalsEl.appendChild(p);
-  }
+    const noSizes = [1.65, 1.42, 1.16, 0.98, 0.82, 0.68, 0.52, 0.38];
+    const noPads = [
+      [18, 58],
+      [15, 46],
+      [12, 34],
+      [9, 26],
+      [7, 18],
+      [5, 14],
+      [4, 10],
+      [3, 8]
+    ];
 
-  const btnNo = document.getElementById('btnNo');
-  let noCount = 0;
-  let isFixed = false;
+    let noCount = 0;
+    let isFixed = false;
+    let audioEnabled = true;
+    let audioCtx = null;
 
-  function initFixed() {
-    if (isFixed) return;
-    isFixed = true;
-    const r = btnNo.getBoundingClientRect();
-    btnNo.style.left = (r.left + r.width / 2) + 'px';
-    btnNo.style.top  = (r.top  + r.height / 2) + 'px';
-    btnNo.style.position = 'fixed';
-    btnNo.style.transform = 'translate(-50%, -50%)';
-    btnNo.style.zIndex = '999';
-    document.body.appendChild(btnNo);
-  }
+    function createBackgroundItems() {
+      for (let i = 0; i < 34; i++) {
+        const item = document.createElement("div");
+        item.className = "float-item";
+        item.textContent = floatEmojis[Math.floor(Math.random() * floatEmojis.length)];
+        item.style.left = Math.random() * 100 + "%";
+        item.style.animationDuration = (4 + Math.random() * 7) + "s";
+        item.style.animationDelay = (-Math.random() * 10) + "s";
+        item.style.fontSize = (15 + Math.random() * 18) + "px";
+        sky.appendChild(item);
+      }
 
-  function handleNo() {
-    noCount++;
-    if (noCount >= 3) {
-      initFixed();
-      runAway();
+      for (let i = 0; i < 26; i++) {
+        const s = document.createElement("div");
+        s.className = "sparkle";
+        s.style.left = Math.random() * 100 + "%";
+        s.style.top = Math.random() * 100 + "%";
+        const size = 2 + Math.random() * 4.5;
+        s.style.width = size + "px";
+        s.style.height = size + "px";
+        s.style.animationDuration = (1.8 + Math.random() * 3) + "s";
+        s.style.animationDelay = (-Math.random() * 3) + "s";
+        sparkles.appendChild(s);
+      }
     }
-  }
 
-  function runAway() {
-    const margin = 60;
-    const maxX = window.innerWidth  - margin;
-    const maxY = window.innerHeight - margin;
+    createBackgroundItems();
 
-    const newX = margin + Math.random() * (maxX - margin);
-    const newY = margin + Math.random() * (maxY - margin);
+    function ensureAudio() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+    }
 
-    btnNo.classList.add('running');
-    btnNo.style.left = newX + 'px';
-    btnNo.style.top  = newY + 'px';
-  }
+    function playTone(freq = 660, duration = 0.08, type = "sine", volume = 0.03) {
+      if (!audioEnabled) return;
+      ensureAudio();
+      if (!audioCtx) return;
 
-  function handleYes() {
-    document.getElementById('main-content').style.display = 'none';
-    if (isFixed) btnNo.style.display = 'none';
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
 
-    const ans = document.getElementById('answer-yes');
-    ans.style.display = 'flex';
-  }
-</script>
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
+      gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(volume, audioCtx.currentTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration + 0.02);
+    }
+
+    function playNoSound() {
+      playTone(420, 0.05, "triangle", 0.025);
+      setTimeout(() => playTone(340, 0.06, "triangle", 0.02), 55);
+    }
+
+    function playYesSound() {
+      playTone(523.25, 0.08, "sine", 0.03);
+      setTimeout(() => playTone(659.25, 0.09, "sine", 0.03), 90);
+      setTimeout(() => playTone(783.99, 0.12, "sine", 0.035), 180);
+      setTimeout(() => playTone(1046.5, 0.16, "sine", 0.04), 290);
+    }
+
+    muteBtn.addEventListener("click", () => {
+      audioEnabled = !audioEnabled;
+      muteBtn.textContent = audioEnabled ? "🔊" : "🔇";
+      if (audioEnabled) playTone(720, 0.06, "sine", 0.02);
+    });
+
+    function initFixed() {
+      if (isFixed) return;
+      isFixed = true;
+
+      const rect = btnNo.getBoundingClientRect();
+      btnNo.style.position = "fixed";
+      btnNo.style.left = (rect.left + rect.width / 2) + "px";
+      btnNo.style.top = (rect.top + rect.height / 2) + "px";
+      btnNo.style.transform = "translate(-50%, -50%)";
+      btnNo.style.zIndex = "999";
+      document.body.appendChild(btnNo);
+    }
+
+    function growYesButton() {
+      const current = parseFloat(btnYes.dataset.scale || "1");
+      const next = Math.min(1.95, current + 0.08);
+      btnYes.dataset.scale = next;
+      btnYes.style.transform = `scale(${next})`;
+      btnYes.style.boxShadow = "0 12px 30px rgba(233, 30, 99, 0.44)";
+    }
+
+    function shrinkNoButton() {
+      const sizeIndex = Math.min(noCount - 1, noSizes.length - 1);
+      const padIndex = Math.min(noCount - 1, noPads.length - 1);
+      btnNo.style.fontSize = noSizes[sizeIndex] + "rem";
+      btnNo.style.padding = noPads[padIndex][0] + "px " + noPads[padIndex][1] + "px";
+    }
+
+    function handleNo() {
+      noCount++;
+      playNoSound();
+      btnNo.classList.remove("shake");
+      void btnNo.offsetWidth;
+      btnNo.classList.add("shake");
+
+      const msgIndex = Math.min(noCount - 1, noMessages.length - 1);
+      btnNo.textContent = noMessages[msgIndex];
+
+      shrinkNoButton();
+      growYesButton();
+      miniLovePopNearButton(btnYes);
+
+      if (noCount >= 2) {
+        initFixed();
+      }
+
+      if (noCount >= 2) {
+        setTimeout(() => {
+          runAway();
+        }, 90);
+      }
+
+      if (noCount >= 5) {
+        btnNo.style.filter = "blur(0.1px)";
+      }
+
+      if (noCount >= 7) {
+        btnNo.style.opacity = "0.65";
+      }
+
+      if (parseFloat(btnNo.style.fontSize) <= 0.12) {
+        btnNo.style.opacity = "0";
+        btnNo.style.pointerEvents = "none";
+      }
+    }
+
+    function runAway() {
+      const margin = 70;
+      const maxX = window.innerWidth - margin;
+      const maxY = window.innerHeight - margin;
+
+      let newX, newY, tries = 0;
+      do {
+        newX = margin + Math.random() * (maxX - margin);
+        newY = margin + Math.random() * (maxY - margin);
+        tries++;
+      } while (tries < 25 && isNearCurrent(newX, newY, 150));
+
+      btnNo.classList.add("running");
+      btnNo.style.left = newX + "px";
+      btnNo.style.top = newY + "px";
+
+      const currentSize = parseFloat(btnNo.style.fontSize) || 0.5;
+      const currentPadV = parseInt(btnNo.style.paddingTop) || 5;
+      const currentPadH = parseInt(btnNo.style.paddingLeft) || 14;
+
+      btnNo.style.fontSize = Math.max(0.08, currentSize - 0.08) + "rem";
+      btnNo.style.padding =
+        Math.max(2, currentPadV - 1) + "px " +
+        Math.max(5, currentPadH - 2) + "px";
+
+      miniLovePop(newX, newY, ["💨", "😳", "🏃🏻", "✨"]);
+    }
+
+    function isNearCurrent(x, y, minDist) {
+      const currentX = parseFloat(btnNo.style.left) || window.innerWidth / 2;
+      const currentY = parseFloat(btnNo.style.top) || window.innerHeight / 2;
+      return Math.hypot(x - currentX, y - currentY) < minDist;
+    }
+
+    function handleYes() {
+      playYesSound();
+      document.getElementById("main-content").style.display = "none";
+      if (isFixed) btnNo.style.display = "none";
+
+      yesGlow.classList.add("show-glow");
+
+      const answer = document.getElementById("answer-yes");
+      answer.style.display = "flex";
+
+      burstLove();
+      massiveConfetti();
+      showerHearts();
+      cardPulse();
+    }
+
+    function cardPulse() {
+      card.animate(
+        [
+          { transform: "scale(1)" },
+          { transform: "scale(1.025)" },
+          { transform: "scale(1)" }
+        ],
+        { duration: 650, easing: "ease-out" }
+      );
+    }
+
+    function massiveConfetti() {
+      const icons = ["💖", "💕", "🌸", "🐰", "🥚", "💗", "✨", "💞", "🫶🏻"];
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      for (let i = 0; i < 65; i++) {
+        const el = document.createElement("div");
+        el.className = "confetti";
+        el.textContent = icons[Math.floor(Math.random() * icons.length)];
+        el.style.left = centerX + "px";
+        el.style.top = centerY + "px";
+        el.style.fontSize = (18 + Math.random() * 18) + "px";
+        el.style.setProperty("--tx", (Math.random() * 900 - 450) + "px");
+        el.style.setProperty("--ty", (Math.random() * 700 - 350) + "px");
+        el.style.setProperty("--rot", (Math.random() * 720 - 360) + "deg");
+        confettiLayer.appendChild(el);
+        setTimeout(() => el.remove(), 1900);
+      }
+    }
+
+    function showerHearts() {
+      for (let i = 0; i < 36; i++) {
+        setTimeout(() => {
+          const item = document.createElement("div");
+          item.className = "float-item";
+          item.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
+          item.style.left = Math.random() * 100 + "%";
+          item.style.top = (25 + Math.random() * 35) + "%";
+          item.style.animationDuration = (2 + Math.random() * 2.6) + "s";
+          item.style.fontSize = (20 + Math.random() * 16) + "px";
+          sky.appendChild(item);
+          setTimeout(() => item.remove(), 4500);
+        }, i * 45);
+      }
+    }
+
+    function burstLove() {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      for (let i = 0; i < 28; i++) {
+        setTimeout(() => {
+          const el = document.createElement("div");
+          el.className = "love-pop";
+          el.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
+          el.style.left = centerX + "px";
+          el.style.top = centerY + "px";
+          el.style.setProperty("--tx", (Math.random() * 420 - 210) + "px");
+          el.style.setProperty("--ty", (Math.random() * 360 - 180) + "px");
+          loveLayer.appendChild(el);
+          setTimeout(() => el.remove(), 1500);
+        }, i * 28);
+      }
+    }
+
+    function miniLovePop(x, y, customEmojis = null) {
+      const icons = customEmojis || ["💖", "💕", "✨", "🌸"];
+      for (let i = 0; i < 8; i++) {
+        const el = document.createElement("div");
+        el.className = "love-pop";
+        el.textContent = icons[Math.floor(Math.random() * icons.length)];
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+        el.style.fontSize = (14 + Math.random() * 8) + "px";
+        el.style.setProperty("--tx", (Math.random() * 120 - 60) + "px");
+        el.style.setProperty("--ty", (Math.random() * 120 - 60) + "px");
+        loveLayer.appendChild(el);
+        setTimeout(() => el.remove(), 1450);
+      }
+    }
+
+    function miniLovePopNearButton(button) {
+      const rect = button.getBoundingClientRect();
+      miniLovePop(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
+
+    window.addEventListener("resize", () => {
+      if (isFixed && btnNo.style.display !== "none") {
+        const x = Math.min(parseFloat(btnNo.style.left) || 0, window.innerWidth - 40);
+        const y = Math.min(parseFloat(btnNo.style.top) || 0, window.innerHeight - 40);
+        btnNo.style.left = x + "px";
+        btnNo.style.top = y + "px";
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("button")) return;
+      if (document.getElementById("answer-yes").style.display === "flex") {
+        miniLovePop(e.clientX, e.clientY, ["💖", "💗", "✨", "🫶🏻", "🌸"]);
+        playTone(880, 0.05, "sine", 0.015);
+      } else {
+        miniLovePop(e.clientX, e.clientY, ["✨", "🌸", "💕"]);
+      }
+    }, { passive: true });
+
+    document.addEventListener("pointerdown", () => {
+      ensureAudio();
+    }, { once: true });
+
+    setInterval(() => {
+      if (document.getElementById("answer-yes").style.display === "flex") {
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        miniLovePop(x, y, ["💖", "✨", "💗"]);
+      }
+    }, 900);
+  </script>
 </body>
 </html>
