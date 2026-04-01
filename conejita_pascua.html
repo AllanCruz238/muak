@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💕 Una pregunta especial</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 25%, #e8f5e9 50%, #fff9c4 75%, #fce4ec 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Georgia', serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .petals-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .petal {
+    position: absolute;
+    top: -30px;
+    animation: falling linear infinite;
+    opacity: 0.7;
+  }
+
+  @keyframes falling {
+    0% { transform: translateY(-30px) rotate(0deg); opacity: 0.7; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .card {
+    position: relative;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 36px;
+    padding: 3.5rem 3.2rem;
+    text-align: center;
+    max-width: 580px;
+    width: 92%;
+    box-shadow: 0 8px 40px rgba(233, 30, 99, 0.18), 0 2px 10px rgba(0,0,0,0.08);
+    border: 2px solid rgba(233, 30, 99, 0.18);
+  }
+
+  .bunny {
+    font-size: 100px;
+    display: block;
+    margin-bottom: 0.6rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .question {
+    font-size: 2rem;
+    color: #c2185b;
+    font-weight: bold;
+    margin-bottom: 0.6rem;
+    line-height: 1.3;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: #ad1457;
+    margin-bottom: 2.4rem;
+    font-style: italic;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 1.6rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-yes {
+    background: linear-gradient(135deg, #e91e63, #f06292);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 18px 56px;
+    font-size: 1.35rem;
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 18px rgba(233, 30, 99, 0.38);
+  }
+
+  .btn-yes:hover {
+    transform: scale(1.07);
+    box-shadow: 0 6px 22px rgba(233, 30, 99, 0.55);
+  }
+
+  .btn-no {
+    background: white;
+    color: #e91e63;
+    border: 2px solid #f48fb1;
+    border-radius: 50px;
+    padding: 18px 56px;
+    font-size: 1.35rem;
+    font-family: 'Georgia', serif;
+    cursor: pointer;
+    position: fixed;
+    opacity: 1;
+    white-space: nowrap;
+  }
+
+  .btn-no:hover { background: #fce4ec; }
+
+  .btn-no.running {
+    transition: left 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+                top 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+                font-size 0.4s ease,
+                padding 0.4s ease,
+                opacity 0.5s ease;
+  }
+
+  .answer-yes {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .answer-yes .big-emoji {
+    font-size: 80px;
+    animation: pop 0.4s ease;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  .answer-yes p {
+    font-size: 1.65rem;
+    color: #c2185b;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+
+  .hearts-burst {
+    font-size: 1.8rem;
+    letter-spacing: 8px;
+    animation: fadeInUp 0.6s ease 0.2s both;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .egg-row {
+    font-size: 1.9rem;
+    letter-spacing: 5px;
+    animation: fadeInUp 0.6s ease 0.5s both;
+  }
+</style>
+</head>
+<body>
+
+<div class="petals-container" id="petals"></div>
+
+<div class="card">
+  <div id="main-content">
+    <span class="bunny">🐰</span>
+    <div class="question">¿Quieres ser mi conejita de Pascua? 🌸</div>
+    <div class="subtitle">La pregunta más importante del año...</div>
+    <div class="btn-group">
+      <button class="btn-yes" onclick="handleYes()">¡Sí! 🐣</button>
+      <button class="btn-no" id="btnNo" onclick="handleNo()">No...</button>
+    </div>
+  </div>
+
+  <div class="answer-yes" id="answer-yes">
+    <div class="big-emoji">🥰</div>
+    <p>Owww sabía que dirías que sí,<br>¡te amo bebé! 💕</p>
+    <div class="hearts-burst">💗 💖 💗</div>
+    <div class="egg-row">🥚🌸🐰🌸🥚</div>
+  </div>
+</div>
+
+<script>
+  const petalsEl = document.getElementById('petals');
+  const emojis = ['🌸','🌺','🥚','🌷','💕','🌼','🌿'];
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (4 + Math.random() * 6) + 's';
+    p.style.animationDelay = (-Math.random() * 8) + 's';
+    p.style.fontSize = (14 + Math.random() * 16) + 'px';
+    petalsEl.appendChild(p);
+  }
+
+  const btnNo = document.getElementById('btnNo');
+  const noMessages = ['No...', 'Nooo 🙁', '¿De verdad no?', '¡Piénsalo bien!', '¡Última oportunidad!'];
+  const noSizes =    [1.35,    1.1,       0.88,             0.68,              0.5];
+  const noPads =     [[18,56], [14,44],   [11,32],          [8,22],            [6,14]];
+  let noCount = 0;
+  let isFixed = false;
+
+  function initFixed() {
+    if (isFixed) return;
+    isFixed = true;
+    const r = btnNo.getBoundingClientRect();
+    btnNo.style.left = (r.left + r.width / 2) + 'px';
+    btnNo.style.top  = (r.top  + r.height / 2) + 'px';
+    btnNo.style.transform = 'translate(-50%, -50%)';
+    btnNo.style.margin = '0';
+    btnNo.style.zIndex = '999';
+    document.body.appendChild(btnNo);
+  }
+
+  function handleNo() {
+    noCount++;
+
+    if (noCount <= 4) {
+      const sz = noSizes[noCount - 1] || 0.4;
+      const [pv, ph] = noPads[noCount - 1] || [6, 14];
+      btnNo.style.transition = 'font-size 0.3s ease, padding 0.3s ease';
+      btnNo.style.fontSize = sz + 'rem';
+      btnNo.style.padding = pv + 'px ' + ph + 'px';
+      btnNo.textContent = noMessages[noCount - 1];
+    }
+
+    if (noCount === 4) {
+      initFixed();
+    }
+
+    if (noCount >= 5) {
+      initFixed();
+      runAway();
+    }
+  }
+
+  function runAway() {
+    const margin = 60;
+    const maxX = window.innerWidth  - margin;
+    const maxY = window.innerHeight - margin;
+
+    let newX, newY, attempts = 0;
+    do {
+      newX = margin + Math.random() * (maxX - margin);
+      newY = margin + Math.random() * (maxY - margin);
+      attempts++;
+    } while (attempts < 20 && isNearCurrent(newX, newY, 120));
+
+    const currentSize = parseFloat(btnNo.style.fontSize) || 0.5;
+    const newSize = Math.max(0, currentSize - 0.13);
+    const currentPad = parseInt(btnNo.style.paddingTop) || 6;
+    const newPad = Math.max(3, currentPad - 2);
+    const currentPadH = parseInt(btnNo.style.paddingLeft) || 14;
+    const newPadH = Math.max(8, currentPadH - 3);
+
+    btnNo.classList.add('running');
+    btnNo.style.left = newX + 'px';
+    btnNo.style.top  = newY + 'px';
+    btnNo.style.fontSize = newSize + 'rem';
+    btnNo.style.padding = newPad + 'px ' + newPadH + 'px';
+
+    if (newSize <= 0.08) {
+      btnNo.style.opacity = '0';
+      btnNo.style.pointerEvents = 'none';
+    }
+  }
+
+  function isNearCurrent(x, y, minDist) {
+    const cx = parseFloat(btnNo.style.left) || window.innerWidth / 2;
+    const cy = parseFloat(btnNo.style.top)  || window.innerHeight / 2;
+    return Math.hypot(x - cx, y - cy) < minDist;
+  }
+
+  function handleYes() {
+    document.getElementById('main-content').style.display = 'none';
+    if (isFixed) btnNo.style.display = 'none';
+    const ans = document.getElementById('answer-yes');
+    ans.style.display = 'flex';
+
+    for (let i = 0; i < 24; i++) {
+      setTimeout(() => {
+        const p = document.createElement('div');
+        p.className = 'petal';
+        p.textContent = ['💕','🌸','🐰','🥚','💖'][Math.floor(Math.random() * 5)];
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (2 + Math.random() * 3) + 's';
+        p.style.fontSize = (20 + Math.random() * 16) + 'px';
+        petalsEl.appendChild(p);
+      }, i * 70);
+    }
+  }
+</script>
+</body>
+</html>
