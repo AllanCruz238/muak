@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>💕 Una pregunta especial</title>
+
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -61,7 +62,7 @@
   }
 
   .bunny {
-    font-size: 100px;
+    font-size: 110px;
     display: block;
     margin-bottom: 0.6rem;
     animation: bounce 2s ease-in-out infinite;
@@ -73,7 +74,7 @@
   }
 
   .question {
-    font-size: 2rem;
+    font-size: 2.6rem;
     color: #c2185b;
     font-weight: bold;
     margin-bottom: 0.6rem;
@@ -81,7 +82,7 @@
   }
 
   .subtitle {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: #ad1457;
     margin-bottom: 2.4rem;
     font-style: italic;
@@ -92,7 +93,7 @@
     gap: 1.6rem;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   .btn-yes {
@@ -100,8 +101,8 @@
     color: white;
     border: none;
     border-radius: 50px;
-    padding: 18px 56px;
-    font-size: 1.35rem;
+    padding: 20px 60px;
+    font-size: 1.6rem;
     font-family: 'Georgia', serif;
     font-weight: bold;
     cursor: pointer;
@@ -119,12 +120,11 @@
     color: #e91e63;
     border: 2px solid #f48fb1;
     border-radius: 50px;
-    padding: 18px 56px;
-    font-size: 1.35rem;
+    padding: 20px 60px;
+    font-size: 1.6rem;
     font-family: 'Georgia', serif;
     cursor: pointer;
-    position: fixed;
-    opacity: 1;
+    position: relative; /* FIX */
     white-space: nowrap;
   }
 
@@ -146,7 +146,7 @@
   }
 
   .answer-yes .big-emoji {
-    font-size: 80px;
+    font-size: 90px;
     animation: pop 0.4s ease;
   }
 
@@ -157,30 +157,26 @@
   }
 
   .answer-yes p {
-    font-size: 1.65rem;
+    font-size: 2rem;
     color: #c2185b;
     font-weight: bold;
     line-height: 1.4;
   }
 
   .hearts-burst {
-    font-size: 1.8rem;
+    font-size: 2rem;
     letter-spacing: 8px;
     animation: fadeInUp 0.6s ease 0.2s both;
   }
 
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   .egg-row {
-    font-size: 1.9rem;
+    font-size: 2rem;
     letter-spacing: 5px;
     animation: fadeInUp 0.6s ease 0.5s both;
   }
 </style>
 </head>
+
 <body>
 
 <div class="petals-container" id="petals"></div>
@@ -190,6 +186,7 @@
     <span class="bunny">🐰</span>
     <div class="question">¿Quieres ser mi conejita de Pascua? 🌸</div>
     <div class="subtitle">La pregunta más importante del año...</div>
+
     <div class="btn-group">
       <button class="btn-yes" onclick="handleYes()">¡Sí! 🐣</button>
       <button class="btn-no" id="btnNo" onclick="handleNo()">No...</button>
@@ -207,6 +204,7 @@
 <script>
   const petalsEl = document.getElementById('petals');
   const emojis = ['🌸','🌺','🥚','🌷','💕','🌼','🌿'];
+
   for (let i = 0; i < 22; i++) {
     const p = document.createElement('div');
     p.className = 'petal';
@@ -219,9 +217,6 @@
   }
 
   const btnNo = document.getElementById('btnNo');
-  const noMessages = ['No...', 'Nooo 🙁', '¿De verdad no?', '¡Piénsalo bien!', '¡Última oportunidad!'];
-  const noSizes =    [1.35,    1.1,       0.88,             0.68,              0.5];
-  const noPads =     [[18,56], [14,44],   [11,32],          [8,22],            [6,14]];
   let noCount = 0;
   let isFixed = false;
 
@@ -231,29 +226,15 @@
     const r = btnNo.getBoundingClientRect();
     btnNo.style.left = (r.left + r.width / 2) + 'px';
     btnNo.style.top  = (r.top  + r.height / 2) + 'px';
+    btnNo.style.position = 'fixed';
     btnNo.style.transform = 'translate(-50%, -50%)';
-    btnNo.style.margin = '0';
     btnNo.style.zIndex = '999';
     document.body.appendChild(btnNo);
   }
 
   function handleNo() {
     noCount++;
-
-    if (noCount <= 4) {
-      const sz = noSizes[noCount - 1] || 0.4;
-      const [pv, ph] = noPads[noCount - 1] || [6, 14];
-      btnNo.style.transition = 'font-size 0.3s ease, padding 0.3s ease';
-      btnNo.style.fontSize = sz + 'rem';
-      btnNo.style.padding = pv + 'px ' + ph + 'px';
-      btnNo.textContent = noMessages[noCount - 1];
-    }
-
-    if (noCount === 4) {
-      initFixed();
-    }
-
-    if (noCount >= 5) {
+    if (noCount >= 3) {
       initFixed();
       runAway();
     }
@@ -264,56 +245,22 @@
     const maxX = window.innerWidth  - margin;
     const maxY = window.innerHeight - margin;
 
-    let newX, newY, attempts = 0;
-    do {
-      newX = margin + Math.random() * (maxX - margin);
-      newY = margin + Math.random() * (maxY - margin);
-      attempts++;
-    } while (attempts < 20 && isNearCurrent(newX, newY, 120));
-
-    const currentSize = parseFloat(btnNo.style.fontSize) || 0.5;
-    const newSize = Math.max(0, currentSize - 0.13);
-    const currentPad = parseInt(btnNo.style.paddingTop) || 6;
-    const newPad = Math.max(3, currentPad - 2);
-    const currentPadH = parseInt(btnNo.style.paddingLeft) || 14;
-    const newPadH = Math.max(8, currentPadH - 3);
+    const newX = margin + Math.random() * (maxX - margin);
+    const newY = margin + Math.random() * (maxY - margin);
 
     btnNo.classList.add('running');
     btnNo.style.left = newX + 'px';
     btnNo.style.top  = newY + 'px';
-    btnNo.style.fontSize = newSize + 'rem';
-    btnNo.style.padding = newPad + 'px ' + newPadH + 'px';
-
-    if (newSize <= 0.08) {
-      btnNo.style.opacity = '0';
-      btnNo.style.pointerEvents = 'none';
-    }
-  }
-
-  function isNearCurrent(x, y, minDist) {
-    const cx = parseFloat(btnNo.style.left) || window.innerWidth / 2;
-    const cy = parseFloat(btnNo.style.top)  || window.innerHeight / 2;
-    return Math.hypot(x - cx, y - cy) < minDist;
   }
 
   function handleYes() {
     document.getElementById('main-content').style.display = 'none';
     if (isFixed) btnNo.style.display = 'none';
+
     const ans = document.getElementById('answer-yes');
     ans.style.display = 'flex';
-
-    for (let i = 0; i < 24; i++) {
-      setTimeout(() => {
-        const p = document.createElement('div');
-        p.className = 'petal';
-        p.textContent = ['💕','🌸','🐰','🥚','💖'][Math.floor(Math.random() * 5)];
-        p.style.left = Math.random() * 100 + '%';
-        p.style.animationDuration = (2 + Math.random() * 3) + 's';
-        p.style.fontSize = (20 + Math.random() * 16) + 'px';
-        petalsEl.appendChild(p);
-      }, i * 70);
-    }
   }
 </script>
+
 </body>
 </html>
